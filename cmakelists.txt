@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.26.4 FATAL_ERROR)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+
+project(cpputils VERSION 1.0)
+
+
+add_library(cpputils INTERFACE)
+target_include_directories(cpputils INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
+
+add_subdirectory(include)
