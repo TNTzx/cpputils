@@ -6,6 +6,8 @@
 #include <optional>
 #include <functional>
 
+#include "cpputils.hpp"
+
 
 
 namespace Console {

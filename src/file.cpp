@@ -5,6 +5,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "cpputils.hpp"
+
 
 namespace File {
     // Opens a file and returns the contents of the file in string format.

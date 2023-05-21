@@ -8,10 +8,11 @@
 #include <stdlib.h>
 #include <algorithm>
 
+#include "cpputils.hpp"
+
 
 
 namespace StrUtils {
-    // Repeats the string a set amount of times. Taken from stackoverflow.com for the most efficient method.
     std::string string_repeat(const std::string& str, size_t n) {
         if (n == 0 || str.empty()) return {};
         if (n == 1) return str;

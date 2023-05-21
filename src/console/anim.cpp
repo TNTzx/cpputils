@@ -4,10 +4,7 @@
 #include <iostream>
 #include <cmath>
 
-#include "../sleep.hpp"
-#include "./color.hpp"
-#include "./size.hpp"
-#include "./cursor.hpp"
+#include "cpputils.hpp"
 
 
 

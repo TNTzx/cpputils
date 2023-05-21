@@ -1,9 +1,334 @@
 #pragma once
 
 
-#include "./console/_init.hpp"
+#include <vector>
+#include <memory>
+#include <windows.h>
+#include <ctime>
+#include <optional>
+#include <functional>
 
-#include "./string.hpp"
-#include "./file.hpp"
-#include "./sleep.hpp"
-#include "./datetime.hpp"
+
+
+namespace Datetime {
+    time_t current_timet;
+    std::shared_ptr<time_t> current_timet_ptr;
+    std::shared_ptr<std::tm> current_tm;
+
+    std::shared_ptr<time_t> tm_to_timet(const std::shared_ptr<std::tm>& tm_dt);
+    std::shared_ptr<std::tm> timet_to_tm(const std::shared_ptr<time_t>& time_dt);
+
+    std::string date_format(const std::shared_ptr<std::tm>& tm_dt);
+    std::string date_format(const std::shared_ptr<time_t>& time_dt);
+
+    std::shared_ptr<time_t> ask_date(std::string prompt, std::string prefix = "-\t", std::string blank_input = "::");
+}
+
+
+
+namespace File {
+    std::string read_str_file(std::string file_path);
+}
+
+
+
+void sleep(float seconds);
+
+
+
+namespace StrUtils {
+    // Repeats the string a set amount of times. Taken from stackoverflow.com for the most efficient method.
+    std::string string_repeat(const std::string& str, size_t n);
+
+    // Joins a vector of strings using a separator.
+    std::string join_strs(std::vector<std::string> vec, std::string sep);
+
+    // Checks if the string is a number.
+    bool is_number(std::string &str);
+}
+
+
+
+namespace Console {
+    namespace Anim {
+        // Represents a console animation.
+        class Animator {
+            public:
+                float duration_s = 1;
+
+                Animator(float _duration_s);
+
+                // Runs the animation.
+                virtual void run() {};
+
+                // Gets the seconds per frame given frames.
+                float get_spf(int frames);
+        };
+
+
+        class BarHighlight : public Animator {
+            public:
+                int row = 0;
+                int width = 1;
+                std::string border = "=";
+                Color::SpecStyle style{};
+
+                BarHighlight(
+                    float duration,
+                    int _row,
+                    int _width = 1,
+                    std::string _bar = "=",
+                    Color::SpecStyle _style = Color::SpecStyle()
+                );
+
+
+                // Draws a line across the screen.
+                void draw_line(unsigned int _row, std::string _border);
+
+                // Draws two lines with a set amount of space away from a target row.
+                void draw_surr_lines(unsigned int _row, unsigned int space, std::string _border);
+
+                // Draws surrounding blanks.
+                void draw_surr_blanks(unsigned int _row, unsigned int space);
+
+                // Draws surrounding borders.
+                void draw_surr_border(unsigned int _row, unsigned int space);
+
+                // Draws both the blank and border.
+                void draw_surr_bundle(unsigned int _row, unsigned int space);
+
+                void run() override;
+        };
+
+
+
+        class WipeScreen : public Animator {
+            public:
+                Color::SpecStyle style{};
+                std::string border = "###";
+                bool is_fast = false;
+
+                WipeScreen(
+                    float _duration_s,
+                    std::string _border = "###",
+                    Color::SpecStyle _style = Color::SpecStyle(),
+                    bool _is_fast = false
+                );
+
+                // Gets the width of the input line.
+                int get_line_width(std::string line);
+
+                // Draws a part of the line.
+                void print_line_part(COORD top_coords, std::string line);
+
+                // Draws the entire line.
+                void print_line(short int top_column, std::string line);
+
+                // Draws a blank line.
+                void print_blank(short int top_column);
+
+                // Draws a solid line.
+                void print_border(short int top_column);
+
+                // Prints both the blank and solid line.
+                void print_bundle(short int tl_column);
+
+                void run() override;
+        };
+
+
+
+        class CornerPixelate : public Animator {
+            public:
+                Color::SpecStyle style{};
+
+                CornerPixelate(float _duration_s, Color::SpecStyle _style = Color::SpecStyle());
+
+
+                // Draws the diagonal line.
+                void draw_line(short int top_column);
+
+
+                void run() override;
+        };
+
+        class Typewriter : public Animator {
+            public:
+                std::string source;
+
+                Typewriter(float _duration_s, std::string _source);
+
+                void run() override;
+        };
+    }
+
+
+
+    namespace Color {
+        enum ColorValue {
+            black, red, green, yellow, blue, purple, aqua, white,
+            light_black, light_red, light_green, light_yellow, light_blue, light_purple, light_aqua, bold_white
+        };
+
+
+        const std::string color_values_general[];
+        inline std::string get_color_general(ColorValue console_color);
+
+
+        class GenStyle {
+            public:
+                ColorValue text_color;
+                ColorValue bg_color;
+
+                GenStyle(ColorValue _text_color = ColorValue::white, ColorValue _bg_color = ColorValue::black);
+
+                void set_console_color();
+        };
+
+
+        const std::string color_val_spec_text[];
+        inline std::string get_color_spec_text(ColorValue console_color);
+
+        const std::string color_val_spec_bg[];
+        inline std::string get_color_spec_bg(ColorValue console_color);
+
+
+
+        enum TextStyle {reset, bold, italic, underline};
+        const std::string text_style_str[];
+        inline std::string get_text_style(TextStyle text_style);
+
+
+        std::string specstyle_header;
+        std::string specstyle_footer;
+        class SpecStyle {
+            public:
+                ColorValue text_color = ColorValue::bold_white;
+                ColorValue bg_color = ColorValue::light_black;
+
+                bool bold = false;
+                bool italic = false;
+                bool underline = false;
+                bool reset = true;
+
+                SpecStyle(
+                    bool _reset = true,
+                    ColorValue _text_color = ColorValue::bold_white,
+                    ColorValue _bg_color = ColorValue::black,
+                    bool _bold = false,
+                    bool _italic = false,
+                    bool _underline = false
+                );
+                SpecStyle(
+                    bool _reset,
+                    int _text_color,
+                    int _bg_color,
+                    bool _bold = false,
+                    bool _italic = false,
+                    bool _underline = false
+                );
+
+                static SpecStyle from_genstyle(GenStyle &gen_style);
+
+                std::string get_str();
+        };
+    }
+
+
+
+    namespace Cursor {
+        COORD get_pos();
+
+        void set_pos(short int x, short int y);
+        void set_pos(COORD coords);
+
+        void set_pos_rel(short int x, short int y);
+        void set_pos_rel(COORD coords);
+
+
+        class PosStore {
+            public:
+                COORD previous_pos;
+
+                PosStore();
+                PosStore(COORD _previous_pos);
+
+
+                static PosStore from_current();
+
+                void restore();
+        };
+    }
+
+
+
+    namespace Prompt {
+        std::string prompt_raw(std::string prompt);
+
+        template <class T_Conv>
+        std::optional<T_Conv> send_prompt(
+            std::string prompt,
+            std::function<T_Conv(std::string)> conv_func,
+            bool is_optional = false,
+            bool show_optional_text = true,
+            std::optional<std::string> blank_input = std::nullopt
+        );
+        std::optional<std::string> send_prompt(
+            std::string prompt,
+            bool is_optional = false,
+            bool show_optional_text = true,
+            std::optional<std::string> blank_input = std::nullopt
+        );
+
+        int conv_int(std::string input);
+
+        class ExcInputTooLong : public std::exception {
+            public:
+                const char* what() const noexcept override;
+        };
+
+        class ExcNotYN : public std::exception {
+            public:
+                const char* what() const noexcept override;
+        };
+
+        bool send_prompt_yn(
+            std::string prompt,
+            bool is_optional = false,
+            bool show_optional_text = true,
+            std::optional<std::string> blank_input = std::nullopt
+        );
+    }
+
+
+
+    namespace Size {
+        CONSOLE_SCREEN_BUFFER_INFO get_csbi();
+
+
+        class ConsoleSize {
+            public:
+                int columns = 0;
+                int rows = 0;
+
+                ConsoleSize(int _columns = 0, int _rows = 0);
+        };
+
+
+        ConsoleSize get_size();
+
+        std::string get_fill_hor(std::string filler, ConsoleSize size = get_size());
+    }
+
+
+
+
+    // Flushes the cout and cin streams for reuse regardless of errors.
+    void flush_streams();
+
+    // Clears the console. Taken from stackoverflow.com.
+    void clear_console();
+
+    // Prompts the user to press enter to exit.
+    void enter_to_exit(bool display_text = true);
+}

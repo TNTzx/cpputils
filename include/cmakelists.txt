@@ -1,1 +1,0 @@
-target_sources(cpputils INTERFACE cpputils.hpp)
