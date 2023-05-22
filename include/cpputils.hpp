@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include <iostream>
 #include <vector>
 #include <memory>
 #include <windows.h>
@@ -252,6 +253,7 @@ namespace Console {
     }
 
 
+
     namespace Cursor {
         COORD get_pos();
 
@@ -288,7 +290,34 @@ namespace Console {
             bool is_optional = false,
             bool show_optional_text = true,
             std::optional<std::string> blank_input = std::nullopt
-        );
+        ) {
+            if (!blank_input.has_value()) blank_input = "::";
+
+            T_Conv final_input;
+
+            while (true) {
+                std::string input = prompt_raw(
+                    prompt + (
+                        show_optional_text && is_optional
+                            ? std::string(" (input \"") + blank_input.value() + "\" to leave blank) "
+                            : ""
+                    )
+                );
+
+                if (is_optional && input == blank_input.value()) {return std::nullopt;}
+
+                try {
+                    final_input = conv_func(input);
+                } catch (std::exception& exc) {
+                    std::cout << "Invalid input. " << exc.what() << std::endl;
+                    continue;
+                }
+
+                break;
+            }
+
+            return final_input;
+        };
         std::optional<std::string> send_prompt(
             std::string prompt,
             bool is_optional = false,

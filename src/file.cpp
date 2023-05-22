@@ -32,6 +32,8 @@ namespace File {
 
             file_type_vec.insert(file_type_vec.end(), desc.begin(), desc.end());
             file_type_vec.push_back('\0');
+            file_type_vec.push_back('*');
+            file_type_vec.push_back('.');
             file_type_vec.insert(file_type_vec.end(), file_ext.begin(), file_ext.end());
             file_type_vec.push_back('\0');
         }
