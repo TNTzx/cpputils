@@ -89,7 +89,7 @@ namespace Console {
 
         WipeScreen::WipeScreen(
             float _duration_s,
-            std::string _border,
+            const std::string& _border,
             Color::SpecStyle _style,
             bool _is_fast
         ) : Animator(

@@ -29,7 +29,7 @@ namespace Console {
     };
 
     // Prompts the user to press enter to exit.
-    void enter_to_exit(bool display_text = true) {
+    void enter_to_exit(bool display_text) {
         Color::SpecStyle specstyle(false, Color::light_black, Color::black, true);
         if (display_text) std::cout << specstyle.get_str() << "Press enter to exit.";
 

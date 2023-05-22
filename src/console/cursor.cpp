@@ -1,6 +1,3 @@
-#pragma once
-
-
 #include <windows.h>
 
 #include "cpputils.hpp"
