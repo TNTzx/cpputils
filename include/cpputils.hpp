@@ -9,6 +9,7 @@
 #include <functional>
 #include <string>
 #include <exception>
+#include <filesystem>
 #include <vector>
 #include <tuple>
 
@@ -44,6 +45,8 @@ namespace File {
     };
 
     std::filesystem::path open_file_dialog(const char* title = "Select a file...", std::vector<std::tuple<std::string, std::string>> file_types = {});
+
+    std::filesystem::path get_exe_path();
 }
 
 

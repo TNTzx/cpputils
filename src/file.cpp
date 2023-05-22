@@ -57,7 +57,7 @@ namespace File {
         ofn.lStructSize = sizeof(ofn);
         ofn.lpstrFile = file;
         ofn.nMaxFile = sizeof(file);
-        ofn.lpstrFilter = filter.c_str();
+        ofn.lpstrFilter = file_type_str.c_str();
         ofn.nFilterIndex = 1;
         ofn.lpstrTitle = title;
         ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
@@ -69,5 +69,12 @@ namespace File {
             if (error != 0) throw ExcFD();
             else throw ExcFD_Cancel();
         }
+    }
+
+    std::filesystem::path get_exe_path() {
+        WCHAR path[MAX_PATH];
+        GetModuleFileNameW(NULL, path, MAX_PATH);
+
+        return path;
     }
 }
