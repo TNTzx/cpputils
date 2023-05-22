@@ -8,6 +8,9 @@
 #include <optional>
 #include <functional>
 #include <string>
+#include <exception>
+#include <vector>
+#include <tuple>
 
 
 
@@ -28,7 +31,19 @@ namespace Datetime {
 
 
 namespace File {
-    std::string read_str_file(const std::string& file_path);
+    std::string read_str_file(std::filesystem::path file_path);
+
+
+    class ExcFD : public std::exception {
+        public:
+            const char* what() const noexcept override;
+    };
+    class ExcFD_Cancel : public ExcFD {
+        public:
+            const char* what() const noexcept override;
+    };
+
+    std::filesystem::path open_file_dialog(const char* title = "Select a file...", std::vector<std::tuple<std::string, std::string>> file_types = {});
 }
 
 
