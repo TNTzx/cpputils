@@ -13,12 +13,12 @@ set(
     src/sleep.cpp
     src/string.cpp
 
-    #     src/console/anim.cpp
-    #     src/console/color.cpp
-    #     src/console/cursor.cpp
-    #     src/console/other.cpp
-    #     src/console/prompt.cpp
-    #     src/console/size.cpp
+        src/console/anim.cpp
+        src/console/color.cpp
+        src/console/cursor.cpp
+        src/console/other.cpp
+        src/console/prompt.cpp
+        src/console/size.cpp
 )
 
 add_library(cpputils STATIC ${SOURCES})
