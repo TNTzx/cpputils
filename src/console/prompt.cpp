@@ -1,6 +1,3 @@
-#pragma once
-
-
 #include <iostream>
 #include <string>
 #include <optional>
@@ -23,9 +20,9 @@ namespace Console {
         std::optional<T_Conv> send_prompt(
             std::string prompt,
             std::function<T_Conv(std::string)> conv_func,
-            bool is_optional = false,
-            bool show_optional_text = true,
-            std::optional<std::string> blank_input = std::nullopt
+            bool is_optional,
+            bool show_optional_text,
+            std::optional<std::string> blank_input
         ) {
             if (!blank_input.has_value()) blank_input = "::";
 
@@ -56,9 +53,9 @@ namespace Console {
         }
         std::optional<std::string> send_prompt(
             std::string prompt,
-            bool is_optional = false,
-            bool show_optional_text = true,
-            std::optional<std::string> blank_input = std::nullopt
+            bool is_optional,
+            bool show_optional_text,
+            std::optional<std::string> blank_input
         ) {
             return send_prompt<std::string>(
                 prompt,
@@ -75,25 +72,15 @@ namespace Console {
 
 
 
-        class ExcInputTooLong : public std::exception {
-            public:
-                const char* what() const noexcept override {
-                    return "Input is too long.";
-                }
-        };
-
-        class ExcNotYN : public std::exception {
-            public:
-                const char* what() const noexcept override {
-                    return "Input isn't \"Y\" or \"N\".";
-                }
-        };
+        const char* ExcInputTooLong::what() const noexcept {
+            return "Input is too long.";
+        }
 
         bool send_prompt_yn(
             std::string prompt,
-            bool is_optional = false,
-            bool show_optional_text = true,
-            std::optional<std::string> blank_input = std::nullopt
+            bool is_optional,
+            bool show_optional_text,
+            std::optional<std::string> blank_input
         ) {
             // TEST not yn
             // TEST casing

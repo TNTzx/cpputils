@@ -18,7 +18,7 @@ namespace Console {
 
 
         // ConsoleSize
-            ConsoleSize::ConsoleSize(int _columns = 0, int _rows = 0) {
+            ConsoleSize::ConsoleSize(int _columns, int _rows) {
                 this->columns = _columns;
                 this->rows = _rows;
             };
@@ -33,7 +33,7 @@ namespace Console {
         };
 
 
-        std::string get_fill_hor(std::string filler, ConsoleSize size = get_size()) {
+        std::string get_fill_hor(std::string filler, ConsoleSize size) {
             int filler_size = filler.size();
             std::string new_str = StrUtils::string_repeat(filler, size.columns / filler_size);
             std::string extra = filler.substr(0, size.columns % filler_size);

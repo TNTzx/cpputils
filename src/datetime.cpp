@@ -35,7 +35,7 @@ namespace Datetime {
     }
 
 
-    std::shared_ptr<time_t> ask_date(std::string prompt, std::string prefix = "-\t", std::string blank_input = "::") {
+    std::shared_ptr<time_t> ask_date(const std::string& prompt, const std::string& prefix, const std::string& blank_input) {
         std::tm tm_dt;
 
         std::cout << std::endl << prompt << std::endl;

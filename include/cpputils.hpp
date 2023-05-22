@@ -7,13 +7,14 @@
 #include <ctime>
 #include <optional>
 #include <functional>
+#include <string>
 
 
 
 namespace Datetime {
-    time_t current_timet;
-    std::shared_ptr<time_t> current_timet_ptr;
-    std::shared_ptr<std::tm> current_tm;
+    extern time_t current_timet;
+    extern std::shared_ptr<time_t> current_timet_ptr;
+    extern std::shared_ptr<std::tm> current_tm;
 
     std::shared_ptr<time_t> tm_to_timet(const std::shared_ptr<std::tm>& tm_dt);
     std::shared_ptr<std::tm> timet_to_tm(const std::shared_ptr<time_t>& time_dt);
@@ -21,13 +22,13 @@ namespace Datetime {
     std::string date_format(const std::shared_ptr<std::tm>& tm_dt);
     std::string date_format(const std::shared_ptr<time_t>& time_dt);
 
-    std::shared_ptr<time_t> ask_date(std::string prompt, std::string prefix = "-\t", std::string blank_input = "::");
+    std::shared_ptr<time_t> ask_date(const std::string& prompt, const std::string& prefix = std::string("-\t"), const std::string& blank_input = std::string("::"));
 }
 
 
 
 namespace File {
-    std::string read_str_file(std::string file_path);
+    std::string read_str_file(const std::string& file_path);
 }
 
 
@@ -41,15 +42,85 @@ namespace StrUtils {
     std::string string_repeat(const std::string& str, size_t n);
 
     // Joins a vector of strings using a separator.
-    std::string join_strs(std::vector<std::string> vec, std::string sep);
+    std::string join_strs(std::vector<std::string> vec, const std::string& sep);
 
     // Checks if the string is a number.
-    bool is_number(std::string &str);
+    bool is_number(const std::string& str);
 }
 
 
 
 namespace Console {
+    namespace Color {
+        enum ColorValue {
+            black, red, green, yellow, blue, purple, aqua, white,
+            light_black, light_red, light_green, light_yellow, light_blue, light_purple, light_aqua, bold_white
+        };
+
+
+        extern const std::string color_values_general[];
+        inline std::string get_color_general(ColorValue console_color);
+
+
+        class GenStyle {
+            public:
+                ColorValue text_color;
+                ColorValue bg_color;
+
+                GenStyle(ColorValue _text_color = ColorValue::white, ColorValue _bg_color = ColorValue::black);
+
+                void set_console_color();
+        };
+
+
+        extern const std::string color_val_spec_text[];
+        inline std::string get_color_spec_text(ColorValue console_color);
+
+        extern const std::string color_val_spec_bg[];
+        inline std::string get_color_spec_bg(ColorValue console_color);
+
+        enum TextStyle {reset, bold, italic, underline};
+        extern const std::string text_style_str[];
+        inline std::string get_text_style(TextStyle text_style);
+
+
+        extern const std::string specstyle_header;
+        extern const std::string specstyle_footer;
+        class SpecStyle {
+            public:
+                ColorValue text_color = ColorValue::bold_white;
+                ColorValue bg_color = ColorValue::light_black;
+
+                bool bold = false;
+                bool italic = false;
+                bool underline = false;
+                bool reset = true;
+
+                SpecStyle(
+                    bool _reset = true,
+                    ColorValue _text_color = ColorValue::bold_white,
+                    ColorValue _bg_color = ColorValue::black,
+                    bool _bold = false,
+                    bool _italic = false,
+                    bool _underline = false
+                );
+                SpecStyle(
+                    bool _reset,
+                    int _text_color,
+                    int _bg_color,
+                    bool _bold = false,
+                    bool _italic = false,
+                    bool _underline = false
+                );
+
+                static SpecStyle from_genstyle(GenStyle &gen_style);
+
+                std::string get_str();
+        };
+    }
+
+
+
     namespace Anim {
         // Represents a console animation.
         class Animator {
@@ -70,14 +141,14 @@ namespace Console {
             public:
                 int row = 0;
                 int width = 1;
-                std::string border = "=";
-                Color::SpecStyle style{};
+                std::string border = std::string("=");
+                Console::Color::SpecStyle style;
 
                 BarHighlight(
                     float duration,
                     int _row,
                     int _width = 1,
-                    std::string _bar = "=",
+                    const std::string& _bar = "=",
                     Color::SpecStyle _style = Color::SpecStyle()
                 );
 
@@ -110,7 +181,7 @@ namespace Console {
 
                 WipeScreen(
                     float _duration_s,
-                    std::string _border = "###",
+                    const std::string& _border = std::string("###"),
                     Color::SpecStyle _style = Color::SpecStyle(),
                     bool _is_fast = false
                 );
@@ -161,79 +232,6 @@ namespace Console {
                 void run() override;
         };
     }
-
-
-
-    namespace Color {
-        enum ColorValue {
-            black, red, green, yellow, blue, purple, aqua, white,
-            light_black, light_red, light_green, light_yellow, light_blue, light_purple, light_aqua, bold_white
-        };
-
-
-        const std::string color_values_general[];
-        inline std::string get_color_general(ColorValue console_color);
-
-
-        class GenStyle {
-            public:
-                ColorValue text_color;
-                ColorValue bg_color;
-
-                GenStyle(ColorValue _text_color = ColorValue::white, ColorValue _bg_color = ColorValue::black);
-
-                void set_console_color();
-        };
-
-
-        const std::string color_val_spec_text[];
-        inline std::string get_color_spec_text(ColorValue console_color);
-
-        const std::string color_val_spec_bg[];
-        inline std::string get_color_spec_bg(ColorValue console_color);
-
-
-
-        enum TextStyle {reset, bold, italic, underline};
-        const std::string text_style_str[];
-        inline std::string get_text_style(TextStyle text_style);
-
-
-        std::string specstyle_header;
-        std::string specstyle_footer;
-        class SpecStyle {
-            public:
-                ColorValue text_color = ColorValue::bold_white;
-                ColorValue bg_color = ColorValue::light_black;
-
-                bool bold = false;
-                bool italic = false;
-                bool underline = false;
-                bool reset = true;
-
-                SpecStyle(
-                    bool _reset = true,
-                    ColorValue _text_color = ColorValue::bold_white,
-                    ColorValue _bg_color = ColorValue::black,
-                    bool _bold = false,
-                    bool _italic = false,
-                    bool _underline = false
-                );
-                SpecStyle(
-                    bool _reset,
-                    int _text_color,
-                    int _bg_color,
-                    bool _bold = false,
-                    bool _italic = false,
-                    bool _underline = false
-                );
-
-                static SpecStyle from_genstyle(GenStyle &gen_style);
-
-                std::string get_str();
-        };
-    }
-
 
 
     namespace Cursor {

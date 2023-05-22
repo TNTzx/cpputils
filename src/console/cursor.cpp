@@ -34,20 +34,12 @@ namespace Console {
         };
 
 
-        class PosStore {
-            public:
-                COORD previous_pos;
-
-                PosStore() {};
-                PosStore(COORD _previous_pos) {
-                    this->previous_pos = _previous_pos;
-                };
-
-
-                static PosStore from_current() {return PosStore(get_pos());};
-
-                void restore() {set_pos(this->previous_pos);};
+        PosStore::PosStore() {};
+        PosStore::PosStore(COORD _previous_pos) {
+            this->previous_pos = _previous_pos;
         };
+        PosStore PosStore::from_current() {return PosStore(get_pos());};
+        void PosStore::restore() {set_pos(this->previous_pos);};
     };
 
 }

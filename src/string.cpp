@@ -1,7 +1,3 @@
-#pragma once
-
-
-
 #include <string>
 #include <cstddef>
 #include <vector>
@@ -29,7 +25,7 @@ namespace StrUtils {
 
 
     // Joins a vector of strings using a separator.
-    std::string join_strs(std::vector<std::string> vec, std::string sep) {
+    std::string join_strs(std::vector<std::string> vec, const std::string& sep) {
         std::string out = vec[0];
         for (unsigned int i = 1; i < vec.size(); i++) {
             out += sep + vec[i];
@@ -40,7 +36,7 @@ namespace StrUtils {
 
 
     // Checks if the string is a number.
-    bool is_number(std::string &str) {
+    bool is_number(const std::string& str) {
         return !str.empty() && all_of(str.begin(), str.end(), ::isdigit);
     };
 }
