@@ -79,12 +79,12 @@ namespace Console {
                 << std::endl;
 
             for (int idx = 0; idx < choices.size(); idx++) {
-                std::cout << "\t[" << idx + 1 << "] " << choices[idx] << std::endl;
+                std::cout << "- [" << idx + 1 << "] " << choices[idx] << std::endl;
             }
 
             std::cout << std::endl << std::endl;
             std::optional<int> idx_choice = send_prompt<int>(
-                "\t[]: ",
+                "[]: ",
                 [choices](std::string input) {
                     int converted = conv_int(input);
                     if (converted > choices.size() || converted < 1) throw ExcOutOfRange();
