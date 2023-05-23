@@ -39,7 +39,7 @@ namespace Console {
 
 
         const char* ExcInputTooLong::what() const noexcept {return "Input is too long.";}
-        const char* ExcNotYN::what() const noexcept {return "THe input is not Y or N.";}
+        const char* ExcNotYN::what() const noexcept {return "The input is not Y or N.";}
 
         bool send_prompt_yn(
             std::string prompt,
@@ -47,8 +47,6 @@ namespace Console {
             bool show_optional_text,
             std::optional<std::string> blank_input
         ) {
-            // TEST not yn
-            // TEST casing
             return send_prompt<bool>(
                 prompt + " (Y/N): ",
                 [](std::string input) {

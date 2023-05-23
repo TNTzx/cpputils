@@ -18,16 +18,15 @@
 
 namespace Datetime {
     extern time_t current_timet;
-    extern std::shared_ptr<time_t> current_timet_ptr;
-    extern std::shared_ptr<std::tm> current_tm;
+    extern std::tm current_tm;
 
-    std::shared_ptr<time_t> tm_to_timet(const std::shared_ptr<std::tm>& tm_dt);
-    std::shared_ptr<std::tm> timet_to_tm(const std::shared_ptr<time_t>& time_dt);
+    time_t tm_to_timet(std::tm tm_dt);
+    std::tm timet_to_tm(time_t time_dt);
 
-    std::string date_format(const std::shared_ptr<std::tm>& tm_dt);
-    std::string date_format(const std::shared_ptr<time_t>& time_dt);
+    std::string date_format(std::tm tm_dt);
+    std::string date_format(time_t time_dt);
 
-    std::shared_ptr<time_t> ask_date(const std::string& prompt, const std::string& prefix = std::string("-\t"), const std::string& blank_input = std::string("::"));
+    time_t ask_date(const std::string& prompt, const std::string& prefix = std::string("-\t"), const std::string& blank_input = std::string("::"));
 }
 
 
