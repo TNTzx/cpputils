@@ -73,10 +73,13 @@ namespace Console {
             bool show_optional_text,
             std::optional<std::string> blank_input
         ) {
-            std::cout << prompt << std::endl;
+            std::cout
+                << prompt << std::endl
+                << "Input the number beside the option you want to pick." << std::endl
+                << std::endl;
 
             for (int idx = 0; idx < choices.size(); idx++) {
-                std::cout << "\t[" << idx + 1 << "]" << choices[idx] << std::endl;
+                std::cout << "\t[" << idx + 1 << "] " << choices[idx] << std::endl;
             }
 
             std::cout << std::endl << std::endl;
@@ -93,7 +96,7 @@ namespace Console {
             );
 
             if (!idx_choice.has_value()) return std::nullopt;
-            return idx_choice.value();
+            return idx_choice.value() - 1;
         }
 
     }
