@@ -348,6 +348,10 @@ namespace Console {
 
 
 
+        class ExcNoChoices : public std::exception {
+            public:
+                const char* what() const noexcept override;
+        };
         class ExcOutOfRange : public std::exception {
             public:
                 const char* what() const noexcept override;

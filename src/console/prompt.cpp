@@ -64,6 +64,7 @@ namespace Console {
         }
 
 
+        const char* ExcNoChoices::what() const noexcept {return "There are no choices supplied.";}
         const char* ExcOutOfRange::what() const noexcept {return "Input is out of range.";}
 
         std::optional<int> send_prompt_choice(
@@ -73,6 +74,8 @@ namespace Console {
             bool show_optional_text,
             std::optional<std::string> blank_input
         ) {
+            if (choices.size() == 0) throw ExcNoChoices();
+
             std::cout
                 << prompt << std::endl
                 << "Input the number beside the option you want to pick." << std::endl
