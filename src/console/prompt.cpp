@@ -12,7 +12,7 @@ namespace Console {
         std::string prompt_raw(std::string prompt) {
             std::string input;
             std::cout << prompt;
-            std::cin >> input;
+            std::getline(std::cin, input);
             return input;
         }
 
