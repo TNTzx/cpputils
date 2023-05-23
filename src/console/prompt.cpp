@@ -63,5 +63,38 @@ namespace Console {
             ).value();
         }
 
+
+        const char* ExcOutOfRange::what() const noexcept {return "Input is out of range.";}
+
+        std::optional<int> send_prompt_choice(
+            std::string prompt,
+            std::vector<std::string> choices,
+            bool is_optional,
+            bool show_optional_text,
+            std::optional<std::string> blank_input
+        ) {
+            std::cout << prompt << std::endl;
+
+            for (int idx = 0; idx < choices.size(); idx++) {
+                std::cout << "\t[" << idx + 1 << "]" << choices[idx] << std::endl;
+            }
+
+            std::cout << std::endl << std::endl;
+            std::optional<int> idx_choice = send_prompt<int>(
+                "\t[]: ",
+                [choices](std::string input) {
+                    int converted = conv_int(input);
+                    if (converted > choices.size() || converted < 1) throw ExcOutOfRange();
+                    return converted;
+                },
+                is_optional,
+                show_optional_text,
+                blank_input
+            );
+
+            if (!idx_choice.has_value()) return std::nullopt;
+            return idx_choice.value();
+        }
+
     }
 }

@@ -327,6 +327,8 @@ namespace Console {
 
         int conv_int(std::string input);
 
+
+
         class ExcInputTooLong : public std::exception {
             public:
                 const char* what() const noexcept override;
@@ -339,6 +341,21 @@ namespace Console {
 
         bool send_prompt_yn(
             std::string prompt,
+            bool is_optional = false,
+            bool show_optional_text = true,
+            std::optional<std::string> blank_input = std::nullopt
+        );
+
+
+
+        class ExcOutOfRange : public std::exception {
+            public:
+                const char* what() const noexcept override;
+        };
+
+        std::optional<int> send_prompt_choice(
+            std::string prompt,
+            std::vector<std::string> choices,
             bool is_optional = false,
             bool show_optional_text = true,
             std::optional<std::string> blank_input = std::nullopt
