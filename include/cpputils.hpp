@@ -282,6 +282,19 @@ namespace Console {
     namespace Prompt {
         std::string prompt_raw(std::string prompt);
 
+
+
+        class ExcP_PromptError : public std::exception {};
+
+
+
+        class Exc_NoInput : public ExcP_PromptError {
+            public:
+                const char* what() const noexcept override;
+        };
+
+
+
         template <class T_Conv>
         std::optional<T_Conv> send_prompt(
             std::string prompt,
@@ -324,16 +337,26 @@ namespace Console {
             std::optional<std::string> blank_input = std::nullopt
         );
 
-        int conv_int(std::string input);
 
-
-
-        class ExcInputTooLong : public std::exception {
+        class Exc_InvalidInt : public ExcP_PromptError {
+            public:
+                const char* what() const noexcept override;
+        };
+        class Exc_InputTooBig : public ExcP_PromptError {
             public:
                 const char* what() const noexcept override;
         };
 
-        class ExcNotYN : public std::exception {
+        int conv_int(std::string input);
+
+
+
+        class Exc_InputTooLong : public ExcP_PromptError {
+            public:
+                const char* what() const noexcept override;
+        };
+
+        class Exc_NotYN : public ExcP_PromptError {
             public:
                 const char* what() const noexcept override;
         };
@@ -347,11 +370,11 @@ namespace Console {
 
 
 
-        class ExcNoChoices : public std::exception {
+        class Exc_NoChoices : public ExcP_PromptError {
             public:
                 const char* what() const noexcept override;
         };
-        class ExcOutOfRange : public std::exception {
+        class Exc_OutOfRange : public ExcP_PromptError {
             public:
                 const char* what() const noexcept override;
         };

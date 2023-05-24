@@ -17,6 +17,8 @@ namespace Console {
         }
 
 
+        const char* Exc_NoInput::what() const noexcept {return "There's no input.";}
+
         std::optional<std::string> send_prompt(
             std::string prompt,
             bool is_optional,
@@ -25,21 +27,34 @@ namespace Console {
         ) {
             return send_prompt<std::string>(
                 prompt,
-                [](std::string input) {return input;},
+                [](std::string input) {
+                    if (input.size() == 0) throw Exc_NoInput();
+                    return input;
+                },
                 is_optional, show_optional_text, blank_input
             );
         }
 
 
+
+        const char* Exc_InvalidInt::what() const noexcept {return "Input is not an integer.";}
+        const char* Exc_InputTooBig::what() const noexcept {return "Input is too big.";}
+
         int conv_int(std::string input) {
-            return stoi(input);
+            try {
+                return stoi(input);
+            } catch (const std::invalid_argument& exc) {
+                throw Exc_InvalidInt();
+            } catch (const std::out_of_range& exc) {
+                throw Exc_InputTooBig();
+            }
         }
 
 
 
 
-        const char* ExcInputTooLong::what() const noexcept {return "Input is too long.";}
-        const char* ExcNotYN::what() const noexcept {return "The input is not Y or N.";}
+        const char* Exc_InputTooLong::what() const noexcept {return "Input is too long.";}
+        const char* Exc_NotYN::what() const noexcept {return "The input is not Y or N.";}
 
         bool send_prompt_yn(
             std::string prompt,
@@ -50,20 +65,20 @@ namespace Console {
             return send_prompt<bool>(
                 prompt + " (Y/N): ",
                 [](std::string input) {
-                    if (input.size() > 1) throw ExcInputTooLong();
+                    if (input.size() > 1) throw Exc_InputTooLong();
 
                     char clean_input = tolower((char)input[0]);
                     if (clean_input == 'y') return true;
                     else if (clean_input == 'n') return false;
-                    else throw ExcNotYN();
+                    else throw Exc_NotYN();
                 },
                 is_optional, show_optional_text, blank_input
             ).value();
         }
 
 
-        const char* ExcNoChoices::what() const noexcept {return "There are no choices supplied.";}
-        const char* ExcOutOfRange::what() const noexcept {return "Input is out of range.";}
+        const char* Exc_NoChoices::what() const noexcept {return "There are no choices supplied.";}
+        const char* Exc_OutOfRange::what() const noexcept {return "Input is out of range.";}
 
         std::optional<int> send_prompt_choice(
             std::string prompt,
@@ -72,7 +87,7 @@ namespace Console {
             bool show_optional_text,
             std::optional<std::string> blank_input
         ) {
-            if (choices.size() == 0) throw ExcNoChoices();
+            if (choices.size() == 0) throw Exc_NoChoices();
 
             std::cout
                 << prompt << std::endl
@@ -88,7 +103,7 @@ namespace Console {
                 "[]: ",
                 [choices](std::string input) {
                     int converted = conv_int(input);
-                    if (converted > choices.size() || converted < 1) throw ExcOutOfRange();
+                    if (converted > choices.size() || converted < 1) throw Exc_OutOfRange();
                     return converted;
                 },
                 is_optional,
