@@ -155,6 +155,7 @@ namespace Console {
         };
 
 
+
         class BarHighlight : public Animator {
             public:
                 int row = 0;
@@ -227,6 +228,28 @@ namespace Console {
 
 
 
+        class FillMiddleThenWipe : public Animator {
+            public:
+                Color::SpecStyle style{};
+
+                FillMiddleThenWipe(float _duration_s, Color::SpecStyle _style = Color::SpecStyle(false, Color::green, Color::green));
+
+
+                // Draws the vertical line.
+                void draw_vert_line(int column);
+
+                // Draws the set of vertical lines.
+                void draw_line_set(int columns_away_from_center);
+
+                // Animates drawing the middle line.
+                void anim_mid_line();
+
+
+                void run() override;
+        };
+
+
+
         class CornerPixelate : public Animator {
             public:
                 Color::SpecStyle style{};
@@ -240,6 +263,8 @@ namespace Console {
 
                 void run() override;
         };
+
+
 
         class Typewriter : public Animator {
             public:

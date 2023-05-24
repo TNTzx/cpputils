@@ -15,6 +15,55 @@ namespace Console {
 
 
 
+        FillMiddleThenWipe::FillMiddleThenWipe(float _duration_s, Color::SpecStyle _style) : Animator(_duration_s) {
+            this->style = _style;
+        }
+
+        void FillMiddleThenWipe::draw_vert_line(int column) {
+            Console::Size::ConsoleSize size = Console::Size::get_size();
+
+            for (int row = 0; row < size.rows; row++) {
+                Console::Cursor::set_pos(column, row);
+                std::cout << this->style.get_str() << " ";
+            }
+        }
+
+        void FillMiddleThenWipe::draw_line_set(int columns_away_from_center) {
+            Console::Size::ConsoleSize size = Console::Size::get_size();
+            int center = (ceil(float(size.columns) / 2.0)) - 1;
+
+            int left = center - columns_away_from_center;
+            if (left >= 0) this->draw_vert_line(left);
+
+            int right = center + columns_away_from_center;
+            if (right <= size.columns - 1) this->draw_vert_line(right);
+        }
+
+        void FillMiddleThenWipe::anim_mid_line() {
+            Console::Size::ConsoleSize size = Console::Size::get_size();
+            int center_col = (ceil(float(size.columns) / 2.0)) - 1;
+
+            float spf = this->get_spf(size.rows);
+            for (int row = 0; row < size.rows; row++) {
+                Console::Cursor::set_pos(center_col, row);
+                std::cout << this->style.get_str() << " ";
+            }
+        }
+
+        void FillMiddleThenWipe::run() {
+            Console::Size::ConsoleSize size = Console::Size::get_size();
+            float surround_spf = this->get_spf(float(size.columns) / 2.0);
+
+            this->anim_mid_line();
+
+            int columns_away_repeats = floor(float(size.columns) / 2.0);
+            for (int columns_away = 1; columns_away <= columns_away_repeats; columns_away++) {
+                this->draw_line_set(columns_away);
+            }
+        }
+
+
+
         BarHighlight::BarHighlight(
             float duration,
             int _row,
