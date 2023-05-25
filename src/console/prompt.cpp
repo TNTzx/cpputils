@@ -111,6 +111,8 @@ namespace Console {
                 blank_input
             );
 
+            std::cout << std::endl;
+
             if (!idx_choice.has_value()) return std::nullopt;
             return idx_choice.value() - 1;
         }
