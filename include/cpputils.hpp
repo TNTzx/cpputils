@@ -305,7 +305,10 @@ namespace Console {
 
 
     namespace Prompt {
-        std::string prompt_raw(std::string prompt);
+        std::string prompt_raw(
+            std::string prompt,
+            std::optional<Color::SpecStyle> input_style = std::nullopt
+        );
 
 
 
@@ -326,19 +329,31 @@ namespace Console {
             std::function<T_Conv(std::string)> conv_func,
             bool is_optional = false,
             bool show_optional_text = true,
-            std::optional<std::string> blank_input = std::nullopt
+            std::optional<std::string> blank_input = std::nullopt,
+
+            std::optional<Color::SpecStyle> prompt_style = std::nullopt,
+            std::optional<Color::SpecStyle> input_style = std::nullopt,
+            std::optional<Color::SpecStyle> error_style = std::nullopt,
+            std::optional<Color::SpecStyle> optional_style = std::nullopt
         ) {
-            if (!blank_input.has_value()) blank_input = "::";
+            blank_input = blank_input.value_or("::");
+
+            prompt_style = prompt_style.value_or(Color::SpecStyle(false, Color::bold_white, Color::black, true));
+            error_style = error_style.value_or(Color::SpecStyle(false, Color::light_red, Color::black, true));
+            optional_style = optional_style.value_or(Color::SpecStyle(false, Color::light_black, Color::black, false, true));
+
 
             T_Conv final_input;
 
             while (true) {
                 std::string input = prompt_raw(
+                    prompt_style.value().get_str() +
                     prompt + (
                         show_optional_text && is_optional
-                            ? std::string(" (input \"") + blank_input.value() + "\" to leave blank) "
+                            ? optional_style.value().get_str() + " (input \"" + blank_input.value() + "\" to leave blank) " + Color::SpecStyle(true).get_str()
                             : ""
-                    )
+                    ),
+                    input_style
                 );
 
                 if (is_optional && input == blank_input.value()) {return std::nullopt;}
@@ -346,7 +361,7 @@ namespace Console {
                 try {
                     final_input = conv_func(input);
                 } catch (std::exception& exc) {
-                    std::cout << "Invalid input. " << exc.what() << std::endl;
+                    std::cout << error_style.value().get_str() << "Invalid input. " << exc.what() << Color::SpecStyle(true).get_str() << std::endl;
                     continue;
                 }
 
@@ -359,7 +374,12 @@ namespace Console {
             std::string prompt,
             bool is_optional = false,
             bool show_optional_text = true,
-            std::optional<std::string> blank_input = std::nullopt
+            std::optional<std::string> blank_input = std::nullopt,
+
+            std::optional<Color::SpecStyle> prompt_style = std::nullopt,
+            std::optional<Color::SpecStyle> input_style = std::nullopt,
+            std::optional<Color::SpecStyle> error_style = std::nullopt,
+            std::optional<Color::SpecStyle> optional_style = std::nullopt
         );
 
 
@@ -390,7 +410,13 @@ namespace Console {
             std::string prompt,
             bool is_optional = false,
             bool show_optional_text = true,
-            std::optional<std::string> blank_input = std::nullopt
+            std::optional<std::string> blank_input = std::nullopt,
+
+            std::optional<Color::SpecStyle> prompt_style = std::nullopt,
+            std::optional<Color::SpecStyle> yn_style = std::nullopt,
+            std::optional<Color::SpecStyle> input_style = std::nullopt,
+            std::optional<Color::SpecStyle> error_style = std::nullopt,
+            std::optional<Color::SpecStyle> optional_style = std::nullopt
         );
 
 
@@ -409,7 +435,14 @@ namespace Console {
             std::vector<std::string> choices,
             bool is_optional = false,
             bool show_optional_text = true,
-            std::optional<std::string> blank_input = std::nullopt
+            std::optional<std::string> blank_input = std::nullopt,
+
+            std::optional<Color::SpecStyle> prompt_style = std::nullopt,
+            std::optional<Color::SpecStyle> info_style = std::nullopt,
+            std::optional<Color::SpecStyle> tag_style = std::nullopt,
+            std::optional<Color::SpecStyle> input_style = std::nullopt,
+            std::optional<Color::SpecStyle> error_style = std::nullopt,
+            std::optional<Color::SpecStyle> optional_style = std::nullopt
         );
     }
 
