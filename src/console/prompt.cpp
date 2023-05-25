@@ -82,9 +82,10 @@ namespace Console {
             yn_style = yn_style.value_or(Color::SpecStyle(false, Color::black, Color::light_black, true));
 
             return send_prompt<bool>(
-                prompt
-                    + " " +
-                    yn_style.value().get_str() + "(Y/N): ",
+                prompt +
+                    " " +
+                    yn_style.value().get_str() + "(Y/N):" + 
+                    Console::Color::SpecStyle(true).get_str(),
 
                 [](std::string input) {
                     if (input.size() > 1) throw Exc_InputTooLong();
