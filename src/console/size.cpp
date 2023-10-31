@@ -32,7 +32,7 @@ namespace Console {
 
         std::string get_fill_hor(std::string filler, ConsoleSize size) {
             int filler_size = filler.size();
-            std::string new_str = StrUtils::string_repeat(filler, size.columns / filler_size);
+            std::string new_str = StrUtils::repeat(filler, size.columns / filler_size);
             std::string extra = filler.substr(0, size.columns % filler_size);
             return new_str + extra;
         };

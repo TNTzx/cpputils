@@ -192,7 +192,7 @@ namespace Console {
         };
 
         void WipeScreen::print_blank(short int top_column) {
-            this->print_line(top_column, StrUtils::string_repeat(" ", this->border.length()));
+            this->print_line(top_column, StrUtils::repeat(" ", this->border.length()));
         };
 
         void WipeScreen::print_border(short int top_column) {

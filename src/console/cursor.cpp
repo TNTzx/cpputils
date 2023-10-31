@@ -31,7 +31,9 @@ namespace Console {
         };
 
 
-        PosStore::PosStore() {};
+        PosStore::PosStore() {
+            this->previous_pos = get_pos();
+        };
         PosStore::PosStore(COORD _previous_pos) {
             this->previous_pos = _previous_pos;
         };

@@ -13,6 +13,7 @@
 #include <filesystem>
 #include <vector>
 #include <tuple>
+#include <sstream>
 
 
 
@@ -51,16 +52,31 @@ namespace File {
 
 
 
+namespace Pointers {
+    template <class T>
+    std::string address_to_string(T* pointer) {
+        std::ostringstream oss;
+        oss << pointer;
+        return oss.str();
+    }
+}
+
+
+
 void sleep(float seconds);
 
 
 
 namespace StrUtils {
     // Repeats the string a set amount of times. Taken from stackoverflow.com for the most efficient method.
-    std::string string_repeat(const std::string& str, size_t n);
+    std::string repeat(const std::string& str, size_t n);
 
     // Joins a vector of strings using a separator.
-    std::string join_strs(std::vector<std::string> vec, const std::string& sep);
+    std::string join(std::vector<std::string> vec, const std::string& sep);
+
+    std::vector<std::string> split(std::string input, std::string delimiter);
+
+    int unicode_length(std::string input);
 
     // Checks if the string is a number.
     bool is_number(const std::string& str);
@@ -477,4 +493,7 @@ namespace Console {
 
     // Prompts the user to press enter to exit.
     void enter_to_exit(bool display_text = true);
+
+    void print_indented(std::string text, size_t starting_column);
+    void print_horcentered(std::string text);
 }

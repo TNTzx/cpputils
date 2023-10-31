@@ -106,7 +106,7 @@ namespace Console {
             if (this->underline) {
                 textstyles.push_back(get_text_style(TextStyle::underline));
             };
-            return specstyle_header + StrUtils::join_strs(textstyles, ";") + specstyle_footer;
+            return specstyle_header + StrUtils::join(textstyles, ";") + specstyle_footer;
         };
     }
 }

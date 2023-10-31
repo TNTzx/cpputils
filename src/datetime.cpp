@@ -3,6 +3,7 @@
 #include <memory>
 #include <ctime>
 #include <optional>
+#include <sstream>
 
 #include "cpputils.hpp"
 
