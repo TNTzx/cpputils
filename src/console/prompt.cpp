@@ -9,12 +9,17 @@
 
 namespace Console {
     namespace Prompt {
+        std::string cin_raw() {
+            std::string input;
+            std::getline(std::cin, input);
+            return input;
+        }
+
         std::string prompt_raw(std::string prompt, std::optional<Color::SpecStyle> input_style) {
             input_style = input_style.value_or(Color::SpecStyle(false, Color::black, Color::bold_white, true));
 
-            std::string input;
             std::cout << prompt << input_style.value().get_str();
-            std::getline(std::cin, input);
+            std::string input = cin_raw();
 
             std::cout << Color::SpecStyle(true).get_str();
 
@@ -103,7 +108,21 @@ namespace Console {
 
 
         const char* Exc_NoChoices::what() const noexcept {return "There are no choices supplied.";}
-        const char* Exc_OutOfRange::what() const noexcept {return "Input is out of range.";}
+        const char* Exc_InvalidInputChoice::what() const noexcept {return "Input is not in the list of choices.";}
+
+        std::string send_prompt_choice_raw(
+            std::vector<std::string> valid_choices
+        ) {
+            if (valid_choices.size() == 0) throw Exc_NoChoices();
+
+            std::string input = cin_raw();
+
+            if (std::find(valid_choices.begin(), valid_choices.end(), input) == valid_choices.end()) {
+                throw Exc_InvalidInputChoice();
+            }
+
+            return input;
+        }
 
         std::optional<int> send_prompt_choice(
             std::string prompt,
@@ -142,7 +161,7 @@ namespace Console {
                 "[]: ",
                 [choices](std::string input) {
                     int converted = conv_int(input);
-                    if (converted > choices.size() || converted < 1) throw Exc_OutOfRange();
+                    if (converted > choices.size() || converted < 1) throw Exc_InvalidInputChoice();
                     return converted;
                 },
                 is_optional, show_optional_text, blank_input,

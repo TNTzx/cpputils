@@ -321,6 +321,8 @@ namespace Console {
 
 
     namespace Prompt {
+        std::string cin_raw();
+
         std::string prompt_raw(
             std::string prompt,
             std::optional<Color::SpecStyle> input_style = std::nullopt
@@ -441,10 +443,14 @@ namespace Console {
             public:
                 const char* what() const noexcept override;
         };
-        class Exc_OutOfRange : public ExcP_PromptError {
+        class Exc_InvalidInputChoice : public ExcP_PromptError {
             public:
                 const char* what() const noexcept override;
         };
+
+        std::string send_prompt_choice_raw(
+            std::vector<std::string> valid_choices
+        );
 
         std::optional<int> send_prompt_choice(
             std::string prompt,
